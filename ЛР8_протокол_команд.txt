@@ -1,0 +1,162 @@
+=== ЛР8. Протокол Git на GitHub ===
+Remote: https://github.com/SilichTimofey/SITARIS-forKorilov-.git
+ПС: Система продажи оружия
+Статья: https://proglib.io/p/git-for-half-an-hour
+Дата: 2026-11-06 09:27
+
+> git config user.name Тимофей
+> git config user.email timasilich06@gmail.com
+> git branch -M main
+> git remote -v
+origin	https://github.com/SilichTimofey/SITARIS-forKorilov-.git (fetch)
+origin	https://github.com/SilichTimofey/SITARIS-forKorilov-.git (push)
+
+## 1–4. init уже был (clone), первый коммит
+> git add README.md hello.txt
+> git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   README.md
+	new file:   hello.txt
+> git commit -m Initial commit: черновик системы продажи оружия
+[main (root-commit) 4da037c] Initial commit: черновик системы продажи оружия
+ 2 files changed, 11 insertions(+)
+ create mode 100644 README.md
+ create mode 100644 hello.txt
+
+## 5. Второй коммит (s/n)
+> git add hello.txt
+> git commit -m Добавлен учёт s/n
+[main cc4ec29] Добавлен учёт s/n
+ 1 file changed, 2 insertions(+)
+
+## 6. Ветвление и merge
+> git checkout -b feature_license_check
+Switched to a new branch 'feature_license_check'
+> git add feature.txt
+> git commit -m New feature: проверка лицензии
+[feature_license_check 6c0ac53] New feature: проверка лицензии
+ 1 file changed, 3 insertions(+)
+ create mode 100644 feature.txt
+> git checkout main
+Your branch is based on 'origin/main', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+Switched to branch 'main'
+> git merge feature_license_check -m Merge branch feature_license_check
+Updating cc4ec29..6c0ac53
+Fast-forward (no commit created; -m option ignored)
+ feature.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 feature.txt
+> git branch -d feature_license_check
+Deleted branch feature_license_check (was 6c0ac53).
+
+## 7. log / show / diff
+> git log --oneline
+6c0ac53 New feature: проверка лицензии
+cc4ec29 Добавлен учёт s/n
+4da037c Initial commit: черновик системы продажи оружия
+> git log --format=%h -n 5
+6c0ac53
+cc4ec29
+4da037c
+> git show --stat 6c0ac53
+commit 6c0ac535b8c941f62eca318c427b796d4629a71e
+Author: Тимофей <timasilich06@gmail.com>
+Date:   Fri Nov 6 09:27:18 2026 +0300
+
+    New feature: проверка лицензии
+
+ feature.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+> git diff 4da037c..6c0ac53 --stat
+feature.txt | 3 +++
+ hello.txt   | 2 ++
+ 2 files changed, 5 insertions(+)
+
+## 8. .gitignore
+> git add .gitignore
+> git status
+On branch main
+Your branch is based on 'origin/main', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   .gitignore
+> git commit -m Добавлен .gitignore
+[main 78578fc] Добавлен .gitignore
+ 1 file changed, 5 insertions(+)
+ create mode 100644 .gitignore
+
+## 9. Конфликт слияния
+> git checkout -b john_branch
+Switched to a new branch 'john_branch'
+> git add print_catalog.js
+> git commit -m John: цикл for для каталога
+[john_branch 591a8e3] John: цикл for для каталога
+ 1 file changed, 4 insertions(+)
+ create mode 100644 print_catalog.js
+> git checkout main
+Your branch is based on 'origin/main', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+Switched to branch 'main'
+> git checkout -b tim_branch
+Switched to a new branch 'tim_branch'
+> git add print_catalog.js
+> git commit -m Tim: forEach для каталога
+[tim_branch 380d87b] Tim: forEach для каталога
+ 1 file changed, 4 insertions(+)
+ create mode 100644 print_catalog.js
+> git checkout main
+Your branch is based on 'origin/main', but the upstream is gone.
+  (use "git branch --unset-upstream" to fixup)
+Switched to branch 'main'
+> git merge john_branch -m Merge john_branch
+Updating 78578fc..591a8e3
+Fast-forward (no commit created; -m option ignored)
+ print_catalog.js | 4 ++++
+ 1 file changed, 4 insertions(+)
+ create mode 100644 print_catalog.js
+> git merge tim_branch (CONFLICT)
+Auto-merging print_catalog.js
+CONFLICT (add/add): Merge conflict in print_catalog.js
+Automatic merge failed; fix conflicts and then commit the result.
+// печать каталога оружия
+<<<<<<< HEAD
+for (var i = 0; i < items.length; i++) {
+  console.log(items[i].serial);
+}
+=======
+items.forEach(function (item) {
+  console.log(item.serial);
+});
+>>>>>>> tim_branch
+
+> git add print_catalog.js
+> git commit -m Конфликт печати каталога разрешён
+[main 64f5aa7] Конфликт печати каталога разрешён
+> git branch -d john_branch
+Deleted branch john_branch (was 591a8e3).
+> git branch -d tim_branch
+Deleted branch tim_branch (was 380d87b).
+
+## 10. Push на GitHub
+> git log --oneline --graph --all
+*   64f5aa7 Конфликт печати каталога разрешён
+|\  
+| * 380d87b Tim: forEach для каталога
+* | 591a8e3 John: цикл for для каталога
+|/  
+* 78578fc Добавлен .gitignore
+* 6c0ac53 New feature: проверка лицензии
+* cc4ec29 Добавлен учёт s/n
+* 4da037c Initial commit: черновик системы продажи оружия
+> git push -u origin main
+branch 'main' set up to track 'origin/main'.
+To https://github.com/SilichTimofey/SITARIS-forKorilov-.git
+ * [new branch]      main -> main
