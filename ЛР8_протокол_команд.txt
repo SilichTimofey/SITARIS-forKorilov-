@@ -160,3 +160,13 @@ Deleted branch tim_branch (was 380d87b).
 branch 'main' set up to track 'origin/main'.
 To https://github.com/SilichTimofey/SITARIS-forKorilov-.git
  * [new branch]      main -> main
+
+=== Дополнение 2026-11-06 09:35 — docx + KirBogle ===
+> git checkout -b feature/catalog-ui
+> 2 commits (catalog.md)
+> git push -u origin feature/catalog-ui
+> GitHub PR #1 created and MERGED into main
+> git pull origin main
+> Collaborator invite: KirBogle (write) — pending accept
+> git checkout -b feature/kirbogle + push
+> Issue #2 for KirBogle
